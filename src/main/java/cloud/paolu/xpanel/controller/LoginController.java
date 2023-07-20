@@ -18,6 +18,7 @@ import org.casbin.casdoor.entity.CasdoorUser;
 import org.casbin.casdoor.exception.CasdoorAuthException;
 import org.casbin.casdoor.service.CasdoorAuthService;
 import org.casbin.casdoor.service.CasdoorUserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,8 @@ import static cloud.paolu.xpanel.exception.enums.GlobalErrorCodeConstants.UNAUTH
 @RestController
 public class LoginController {
 
+    @Value("${casdoor.callback}")
+    private String casdoorCallbackUrl;
     @Resource
     private CasdoorAuthService casdoorAuthService;
 

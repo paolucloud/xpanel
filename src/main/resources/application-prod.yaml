@@ -22,6 +22,7 @@ spring:
       connection-test-query: SELECT 1
 casdoor:
   endpoint: ${CASDOOR_ENDPOINT:http://10.10.10.12:54741}
+  callback: ${CASDOOR_CALLBACK:http://10.10.10.15:8080}
   client-id: ${CASDOOR_CLIENT_ID:0988d1421b7b24b34b0e}
   client-secret: ${CASDOOR_CLIENT_SECERT:486b4c7f74e4bf6594757f081795b5b853892d40}
   certificate: ${CASDOOR_CERTIFICATE}
