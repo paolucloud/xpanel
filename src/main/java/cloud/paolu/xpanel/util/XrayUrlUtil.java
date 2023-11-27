@@ -32,4 +32,18 @@ public class XrayUrlUtil {
         url.setType("none");
         return node.getProtocol() + "://" + Base64.encode(JSONUtil.toJsonStr(url));
     }
+
+    public static String jsonUrl(Node node, String user) {
+        V2rayNUrl url = new V2rayNUrl();
+        url.setV("2");
+        url.setPs(node.getName());
+        url.setAdd(node.getConnAddr());
+        url.setPort(node.getConnPort()+"");
+        url.setId(user);
+        url.setAid("0");
+        url.setScy("auto");
+        url.setNet("tcp");
+        url.setType("none");
+        return node.getProtocol() + "://" + Base64.encode(JSONUtil.toJsonStr(url));
+    }
 }

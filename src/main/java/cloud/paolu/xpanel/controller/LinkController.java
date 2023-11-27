@@ -52,13 +52,7 @@ public class LinkController {
             return "";
         }
         StringBuilder builder = new StringBuilder();
-        try {
-            CasdoorUser user = casdoorUserService.getUser(link.getUserid());
-            nodeService.list().forEach(node -> builder.append(XrayUrlUtil.jsonUrl(node, user)).append(StrUtil.C_LF));
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        nodeService.list().forEach(node -> builder.append(XrayUrlUtil.jsonUrl(node, link.getUserid())).append(StrUtil.C_LF));
         String s = Base64.encode(builder.toString());
         log.info(s);
         return s;
