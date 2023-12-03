@@ -1,10 +1,22 @@
 spring:
-  # Redis配置 （SSO模式一和模式二使用Redis来同步会话）
+  data:
+    redis:
+      database: 3
+      host: 10.10.10.200
+      port: 6379
+      password:
+      timeout: 10s
+      lettuce:
+        pool:
+          max-active: 200
+          max-wait: -1ms
+          max-idle: 10
+          min-idle: 0
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: ${MYSQL_PASSWORD:zw6e6ELHoG}
-    url: jdbc:mysql://${MYSQL_HOST:10.10.10.11}:${MYSQL_PORT:30868}/${MYSQL_DATABASE:xpanel}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    password: ${MYSQL_PASSWORD:123456}
+    url: jdbc:mysql://${MYSQL_HOST:10.10.10.200}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:xpanel}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: ${MYSQL_USER:root}
     hikari:
       #最大连接数，小于等于0会被重置为默认值10；大于零小于1会被重置为minimum-idle的值
@@ -22,41 +34,57 @@ spring:
       #连接测试查询
       connection-test-query: SELECT 1
 casdoor:
-  endpoint: ${CASDOOR_ENDPOINT:http://10.10.10.12:54741}
-  callback: ${CASDOOR_CALLBACK:http://10.10.10.15:8080}
-  client-id: ${CASDOOR_CLIENT_ID:0988d1421b7b24b34b0e}
-  client-secret: ${CASDOOR_CLIENT_SECERT:486b4c7f74e4bf6594757f081795b5b853892d40}
+  endpoint: ${CASDOOR_ENDPOINT:https://casdoor.paolu.cloud}
+  callback: ${CASDOOR_CALLBACK:http://10.10.10.50:8080/callback}
+  client-id: ${CASDOOR_CLIENT_ID:90882e03aa47acd42b93}
+  client-secret: ${CASDOOR_CLIENT_SECERT:23ff2083736ecae94d6f207f52d80cf8f1616c21}
   certificate: |
     -----BEGIN CERTIFICATE-----
-    MIIE3zCCAsegAwIBAgIDAeJAMA0GCSqGSIb3DQEBCwUAMCkxETAPBgNVBAoTCGh4
-    ZGNsb3VkMRQwEgYDVQQDDAtjZXJ0X3hmdng2ajAeFw0yMzA3MTgwMjQ0NThaFw00
-    MzA3MTgwMjQ0NThaMCkxETAPBgNVBAoTCGh4ZGNsb3VkMRQwEgYDVQQDDAtjZXJ0
-    X3hmdng2ajCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAMypyv4E4FHF
-    +zdbeTWwmTqF22k+XKRnBShCNSh71iFI//AkiE6Ux6P1l3Ij6npgetMuu/Qa0liW
-    U0x0OzPMJUJ2jEfFbS59Lmdpdskc56yVDuQjhxPStgwzwqr6qr+p0y5j6BB/Qwo3
-    2OYOn0TD+HH4s+E7DDZyJlnWTrY4xk+3ahMNwpGgVUKaVjlvb+BDSavdMm2WRrOt
-    vZwFBdFUSHgtABYk6EDLaz/ytnJjWiL/BVH/BPBb489wYsKcf9W67+lzjsEzz6x2
-    NbOPiig0BjZbFNN5QiNZU1TShYliH+LSBIwTFO0rYqnvsiQNQ/Di9UAkWl4cN8aJ
-    juv50CJXeuwUcRIR+BC7UwmOKnv8AUqsWqlwGI9Q+yeiqeSpW5aLszchmV0MZH91
-    2Cmj+IMXcFLCRTJxOzgBtiwJZEgWqFPYAx8Ud7b3tcE/Os9RHZaF/zxzZKwD7uG9
-    cyEUJ0Xsphx8cBXMMCQ91vF/RF5cwg8Am0uxpE8r8rKLPW2hmOfrBRWFInKb9ClO
-    edI+touCM0iG9GD5N3sILpOwnYpTo8oZo2jf6szuDjOTTbdR4uqdo1Kky4+diJER
-    fIHYtRihv68ozFd7MYGrEv4W2TX20NDoLzkuJbNd92juQGF46LyZUPlEQPdTtN5Y
-    jUm/aZfc4wd7DDkuc+RKrY+CBUkbEqLfAgMBAAGjEDAOMAwGA1UdEwEB/wQCMAAw
-    DQYJKoZIhvcNAQELBQADggIBAFulp4EeIi5zWgXakoQZk7Qx+mHsLGrUCobXxJJ+
-    XbQAL6RLIGgi49MHLdch7k0GZA0T0+fev+5nvNVV7cG2BHEfDoBGfJ1iHUSXCLN3
-    S9mfJ6EJfPa0PpvSX7q94cRL+33KX7WdN3rg4TaxcVh0zu4mppcohGO33oe6d7Ax
-    ZeEmLU36nhbQx/tCY7gklPloRzQ6ziIJdsSWdI46+48SpiEdIj9RRcHd6KG4ymwB
-    +Nc8SCvdzB71hqle6a+lqMzwh8SZ0+CUa5BdFtEI1UsJP9x71h6wGblMNsL/kSMZ
-    BbzCgUxMX5jcgARGu8BEhGMGGVqzZjv1AmFDqsIk1NSRdjaNAa55b1buy4mP3MuD
-    IpB849jAXxf+FRKsEUzw3PxTEFfjou6OHhmZrmWaS07qwQugYEPk68VqNDzOfrx1
-    KsOpVGCG4nK1bnhKCR8AH1Z7f6Vvo2GLGmPt7zcnsG3xvGtRvwT8Ne8BcHO9Wyrq
-    +QjKBRDHek5bqa0Y5cNbrfvyK4YiPU9KOhCFuhZbSInashQdSmii1cazFRF5rEy9
-    qi6Ocex1jXbftBshKBA7QswYW03N1mWeAeaWBYzqqGn+md9kf1Oj/H+uV68zDiHz
-    xM3RQpbog4kYLWkBEvf7s6GZyKWn+oGGN8/WgI4wOYMuv7kx4lIl5+JbJNeYEND/
-    WlNC
+    MIIE5TCCAs2gAwIBAgIDAeJAMA0GCSqGSIb3DQEBCwUAMCwxFDASBgNVBAoTC3Bh
+    b2x1LWNsb3VkMRQwEgYDVQQDDAtjZXJ0X2tvMGlxdjAeFw0yMzA3MjAwNzI2MTla
+    Fw00MzA3MjAwNzI2MTlaMCwxFDASBgNVBAoTC3Bhb2x1LWNsb3VkMRQwEgYDVQQD
+    DAtjZXJ0X2tvMGlxdjCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAMTn
+    Wh2s12IZxh4eksF6QBVLqnpBsbHf7PZ14MoE7QJ7WHtwgumUkRzD0fMn837nHz17
+    EX7Ll8zF3FmnztQjpGj6ZrbHrj8NlwSUZrvEleUPqbWlSc2TltaBFjHwLgUw9KWE
+    1j/QcICrbqxR6nm7bxS7dXGgXiZG5x4CrWfeh0VlXVCCaJLzkAchK9wG6nnbMmqm
+    1LeNGoeYmfNWHsqpusjNKJE/kWDbIgSeeK7xFkugQMg2PqdB9eg5CAmjjy02+CfK
+    ZvTnEYsb0oeb1qSJ/qKoua7QzWAqX2BCqTM6U4Zhc+tt56iw0Vi6y7CClrJhM2TZ
+    /WDCOPsXYKmhSLrqXJD539pi72+cFiqzq2bOWtwmQNVPPDq/fE1RMiDSW+eihspc
+    d/3MfQPWUuzX6WJJ/c+YAoTESVMszQAtuqtJU7dWVX7iATKT9IkIAqEn1IWjJ3ee
+    41DjRB2vk69bspL5kgGLimgpysCCHiDZWJfVZoSi33ntHSgREyaZpOFBs/2NNxhT
+    7v8VUpejzcftSdufNBBjByk1+v87kCQrtLXwYrWrKl7knaAHOUh8xx5L6PUDW6BI
+    cYVrY3QuSXcKkGCKWKrjIg5ap9IRH4MjKzLnuSYtfO4ULX7ViG2neDxUe5BxnD+I
+    5VM+iFvkrsmPiDvrKZ8b7EaoSulk3pg/uI0Y7q8dAgMBAAGjEDAOMAwGA1UdEwEB
+    /wQCMAAwDQYJKoZIhvcNAQELBQADggIBAJPV6JkhqUZ1GX2DZLk9YIGIHoJzR5I4
+    EaUuOL+CXGPqDLnvezZJaG+M0DxMPsNuD3JbY+1uSb1Er6MNycU5SD5Tzssrg92u
+    lfdG1qOc+HUasr7zc12y618I6+NAE+pp7NqR8POI5TreuLQvjwwBwu7jNDAW1/sj
+    9bSunG8k+OcGUZFc3x4c5cYjdBFg5+AOP12Xnz62nbYihJLYULZxNekFiLNVkSJ/
+    GSOIcNR73/YZMvH3y/obbxa0KJG/gavSr9M+LX0fgPWVCXV2RUubFUbdmJf241Uo
+    v24EtJYJDRIlUtYHp2doxcFGo7pukmUZdmtSxBgd954TQ77W1UTi6A9C25tZT6kW
+    zCHunGATjNfrES3nvRR0UtvrOH4k7QYKWwsKDO5oV5DqsXlpzyUpYH9Q/oyR/UAq
+    5sDvclvUFR40Nip16Puk8J3Wp8DuBwBHduJSFtwa0e3dVktVvpcxzELGQJe0sCZ0
+    bD/lUVbcR27OjxwlhOGwP14SL6bbwcmCjdqpjFKDgzIiOv5fFGyOGt02FHfXirXv
+    RrLiaUku8LU0kKNste47ZmCZMbBOmp85UHlDTaLcy2S6CiNY/z7W0jj1vzQqvnr0
+    zWQD7ngepqQL/iJpNWoHcQZvqGjgU6Cp1qbcl4T5uNme3W7CBUHZ4wAyFWCsUWoZ
+    oMz1v+tMuNIu
     -----END CERTIFICATE-----
   organization-name: hxdcloud
   application-name: x-panel
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
+nnr:
+  name: wangxingrui1997@gmail.com
+  passwd: f878b0516d60267235c475815681726c
+  token: 2e7bb01a-4a11-4f09-b441-52a1d363a515
+retrofit:
+  # 全局重试配置
+  global-retry:
+    # 是否启用全局重试
+    enable: true
+    # 全局重试间隔时间
+    interval-ms: 100
+    # 全局最大重试次数
+    max-retries: 2
+    # 全局重试规则
+    retry-rules:
+      - OCCUR_EXCEPTION

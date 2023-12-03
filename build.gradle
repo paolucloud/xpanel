@@ -31,9 +31,9 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java:8.0.31'
     // https://mvnrepository.com/artifact/org.casbin/casdoor-spring-boot-starter
     implementation group: 'org.casbin', name: 'casdoor-spring-boot-starter', version: '1.7.0'
-
+    implementation('org.springframework.boot:spring-boot-starter-data-redis')
     testImplementation 'com.github.davidfantasy:mybatis-plus-generator-ui:2.0.5'
-
+    implementation 'com.github.lianjiatech:retrofit-spring-boot-starter:3.0.1'
     runtimeOnly 'io.grpc:grpc-netty-shaded:1.56.0'
     implementation 'io.grpc:grpc-protobuf:1.56.0'
     implementation 'io.grpc:grpc-stub:1.56.0'

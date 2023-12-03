@@ -2,6 +2,9 @@ package cloud.paolu.xpanel.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -12,6 +15,8 @@ import java.io.Serializable;
  * @author ray
  * @since 2023-07-18
  */
+@Data
+@ToString
 public class Server implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,64 +27,7 @@ public class Server implements Serializable {
     private Integer sshPort;
     private String sshUser;
     private String sshPass;
+    private String location;
+    private String conditionn;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public Integer getSshPort() {
-        return sshPort;
-    }
-
-    public void setSshPort(Integer sshPort) {
-        this.sshPort = sshPort;
-    }
-
-    public String getSshUser() {
-        return sshUser;
-    }
-
-    public void setSshUser(String sshUser) {
-        this.sshUser = sshUser;
-    }
-
-    public String getSshPass() {
-        return sshPass;
-    }
-
-    public void setSshPass(String sshPass) {
-        this.sshPass = sshPass;
-    }
-
-    @Override
-    public String toString() {
-        return "Server{" +
-        ", id = " + id +
-        ", name = " + name +
-        ", ip = " + ip +
-        ", sshPort = " + sshPort +
-        ", sshUser = " + sshUser +
-        ", sshPass = " + sshPass +
-        "}";
-    }
 }

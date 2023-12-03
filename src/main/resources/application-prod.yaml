@@ -1,4 +1,17 @@
 spring:
+  data:
+    redis:
+      database: 0
+      host: ${REDIS_HOST:redis-master}
+      port: 6379
+      password: ${REDIS_PASSWORD:LXjBLU8ZbD}
+      timeout: 10s
+      lettuce:
+        pool:
+          max-active: 200
+          max-wait: -1ms
+          max-idle: 10
+          min-idle: 0
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -30,3 +43,19 @@ casdoor:
   application-name: ${CASDOOR_APPLICATION_NAME}
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
+nnr:
+  name: wangxingrui1997@gmail.com
+  passwd: f878b0516d60267235c475815681726c
+  token: 2e7bb01a-4a11-4f09-b441-52a1d363a515
+retrofit:
+  # 全局重试配置
+  global-retry:
+    # 是否启用全局重试
+    enable: true
+    # 全局重试间隔时间
+    interval-ms: 100
+    # 全局最大重试次数
+    max-retries: 2
+    # 全局重试规则
+    retry-rules:
+      - OCCUR_EXCEPTION
