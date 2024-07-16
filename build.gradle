@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.1'
     id 'io.spring.dependency-management' version '1.1.0'
+    id 'com.bmuschko.docker-remote-api' version '9.4.0'
 }
 
 group = 'com.example'
@@ -23,6 +24,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'junit:junit:4.13.1'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -39,8 +41,32 @@ dependencies {
     implementation 'io.grpc:grpc-stub:1.56.0'
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
     implementation 'cn.hutool:hutool-all:5.8.20'
+    implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
+    implementation 'com.google.code.gson:gson:2.6.2'
 }
+
+//docker {
+//    // 配置Docker插件
+//    url = 'tcp://localhost:2375' // Docker守护进程的地址
+//    dockerfile = file('Dockerfile') // Dockerfile的路径
+//
+//    // 配置镜像标签
+//    tag = 'registry.hxdcloud.com/paolu/x-panel:latest' // 替换为你想要的镜像标签
+//
+//    // 配置推送到远程仓库
+//    withRegistry {
+//        url = 'https://registry.hxdcloud.com' // 远程私有仓库的URL
+//        credentials {
+//            username = 'wangxingrui1997@gmail.com' // 远程仓库的用户名
+//            password = 'glpat-qb1DMM6X6nw5DRca4yf3' // 远程仓库的密码
+//        }
+//    }
+//}
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+tasks.named("bootBuildImage") {
+    imageName = 'registry.hxdcloud.com/paolu/x-panel:latest'
+    push = true
 }

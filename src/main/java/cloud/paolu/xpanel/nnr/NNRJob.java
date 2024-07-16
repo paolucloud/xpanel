@@ -10,6 +10,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,6 +19,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -47,6 +49,7 @@ public class NNRJob {
     private ServerService serverService;
 
     @Scheduled(cron = "0 0 0 ? * MON") // 每周一凌晨执行
+    @PostConstruct
     public void getCookie() throws IOException {
         log.info("开始获取NNR cookie");
         NNRResp<String> resp = nnrService.login(new LoginReq(nnrProperties.getName(), nnrProperties.getPasswd())).execute().body();
@@ -58,14 +61,14 @@ public class NNRJob {
         }
     }
 
-    @Scheduled(cron = "0 0 * * * *") // 每小时执行一次
+    @Scheduled(cron = "${nnr.cron}") // 每天执行一次
     public void getServers() throws IOException {
         log.info("开始获取NNR servers");
         List<NNRServer> servers = Objects.requireNonNull(nnrService.getServers().execute().body()).getData();
         redisTemplate.opsForValue().set(NNR_SERVERS_REDIS_KEY, servers);
     }
 
-    @Scheduled(cron = "0 0 * * * *") // 每小时执行一次
+    @Scheduled(cron = "${nnr.cron}") // 每小时执行一次
     public void updateRules() throws IOException {
         getRules();
         addRules();
@@ -91,9 +94,7 @@ public class NNRJob {
                         deleteNodeByRid(rule.getRid());
                     }
                 } catch (Exception e) {
-                    log.error(e.getMessage());
-                    log.error("NNR rules 请求异常：{}，删除记录", rule.getName());
-                    deleteNodeByRid(rule.getRid());
+                    log.error("请求异常：{}", e.getMessage());
                 }
             });
         }
@@ -118,9 +119,15 @@ public class NNRJob {
             List<Server> servers = serverService.list();
             servers.forEach(server -> {
                 List<NNRServer> filteredServers = nnrServers.stream()
-                        .filter(nnrServer -> nnrServer.getMf() < 5 &&
-                                StrUtil.containsAll(nnrServer.getName(),server.getLocation().split(",")) &&
-                                StrUtil.containsAnyIgnoreCase(nnrServer.getDetail(),server.getConditionn().split(","))
+                        .filter(nnrServer -> {
+                                    boolean b = nnrServer.getMf() < 5 &&
+                                            StrUtil.containsAll(nnrServer.getName(), server.getLocation().split(","));
+                                    String condition = server.getConditionn();
+                                    if (StrUtil.isNotBlank(condition)) {
+                                        b = b && StrUtil.containsAnyIgnoreCase(nnrServer.getDetail(), condition.split(","));
+                                    }
+                                    return b;
+                                }
                         ).toList();
                 List<NNRRule> filteredRules = nnrRules.stream()
                         .filter(nnrRule -> StrUtil.equals(nnrRule.getRemote(), server.getIp())).toList();
@@ -137,22 +144,26 @@ public class NNRJob {
             AddRuleReq req = new AddRuleReq();
             req.setSid(nnrServer.getSid());
             req.setRemote(server.getIp());
-            req.setRport(12345); // TODO 暂时写死
+            req.setRport(server.getXrayEndpoint()); // TODO 暂时写死
             req.setType("tcp");
 
             log.info("开始添加 NNR Rule：{}", req);
             try {
                 AddRuleResp resp = Objects.requireNonNull(nnrService.addRule(req).execute().body()).getData();
-                Node node = new Node();
-                node.setName(server.getName()+"["+nnrServer.getName()+"]");
-                node.setPort(resp.getPort());
-                node.setProtocol("vmess"); // TODO 写死
-                node.setConnAddr(resp.getHost());
-                node.setConnPort(resp.getPort());
-                node.setHidden(false);
-                node.setRuleId(resp.getRid());
-                node.setServerId(server.getId());
-                nodeService.save(node);
+                String[] hosts = resp.getHost().split(",");
+                for (int i = 0; i < hosts.length; i++) {
+                    Node node = new Node();
+                    node.setName(server.getName() + "[" + nnrServer.getName() + "]-" + (i + 1));
+                    node.setPort(resp.getPort());
+                    node.setProtocol("vmess"); // TODO 写死
+                    node.setConnAddr(hosts[i]);
+                    node.setConnPort(resp.getPort());
+                    node.setHidden(false);
+                    node.setRuleId(resp.getRid());
+                    node.setServerId(server.getId());
+                    nodeService.save(node);
+                }
+
             } catch (IOException e) {
                 log.error("添加 NNR Rule 失败：{}", req);
             }

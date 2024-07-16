@@ -1,8 +1,10 @@
+server:
+  port: 8081
 spring:
   data:
     redis:
-      database: 3
-      host: 10.10.10.200
+      database: 5
+      host: 10.10.10.250
       port: 6379
       password:
       timeout: 10s
@@ -76,6 +78,22 @@ nnr:
   name: wangxingrui1997@gmail.com
   passwd: f878b0516d60267235c475815681726c
   token: 2e7bb01a-4a11-4f09-b441-52a1d363a515
+  cron: ${NNR_CRON:0 0 0 1 1 ?}
+pfgo:
+  username: ofX3Z6hzJnnBTNvRG93b
+  password: NYAC3nV4TpHnqLQqgUjm
+  token: qqbPieZS0rLwIXENOkml
+nyan:
+  items:
+  - name: 后勤局转发
+    url: https://ny.hqj.me
+    username: sunxiaochuan258
+    password: uth9xmx_CUV4zdm3tgm
+  - name: 清秋之地
+    url: https://mb.qingqiu.buzz/
+    username: sunxiaochuan258
+    password: f5b59b33-e67c-413b-91e4-2ace809d4af6
+  cron: ${NYAN_CRON:0 0 * * * *}
 retrofit:
   # 全局重试配置
   global-retry:

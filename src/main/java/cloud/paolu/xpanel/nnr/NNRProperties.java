@@ -13,5 +13,6 @@ public class NNRProperties {
     private String name;
     private String passwd;
     private String token;
+    private String cron;
 
 }

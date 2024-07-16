@@ -47,6 +47,7 @@ nnr:
   name: wangxingrui1997@gmail.com
   passwd: f878b0516d60267235c475815681726c
   token: 2e7bb01a-4a11-4f09-b441-52a1d363a515
+  cron: ${NNR_CRON:0 */5 * * * *}
 retrofit:
   # 全局重试配置
   global-retry:

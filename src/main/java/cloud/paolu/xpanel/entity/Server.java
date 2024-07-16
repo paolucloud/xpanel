@@ -27,6 +27,7 @@ public class Server implements Serializable {
     private Integer sshPort;
     private String sshUser;
     private String sshPass;
+    private Integer xrayEndpoint;
     private String location;
     private String conditionn;
 
